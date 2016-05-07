@@ -40,25 +40,30 @@
             this.button4 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.numericUpDown3);
+            this.groupBox1.Controls.Add(this.numericUpDown4);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.numericUpDown2);
             this.groupBox1.Controls.Add(this.numericUpDown1);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(12, 337);
+            this.groupBox1.Location = new System.Drawing.Point(12, 318);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(204, 118);
+            this.groupBox1.Size = new System.Drawing.Size(204, 137);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Pengaturan";
@@ -73,7 +78,7 @@
             0,
             0,
             65536});
-            this.numericUpDown3.Location = new System.Drawing.Point(124, 92);
+            this.numericUpDown3.Location = new System.Drawing.Point(124, 111);
             this.numericUpDown3.Name = "numericUpDown3";
             this.numericUpDown3.Size = new System.Drawing.Size(54, 20);
             this.numericUpDown3.TabIndex = 5;
@@ -88,7 +93,7 @@
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(40, 94);
+            this.label3.Location = new System.Drawing.Point(40, 113);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(77, 13);
             this.label3.TabIndex = 4;
@@ -98,26 +103,36 @@
             // 
             this.numericUpDown2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDown2.Location = new System.Drawing.Point(124, 64);
+            this.numericUpDown2.Location = new System.Drawing.Point(124, 83);
             this.numericUpDown2.Name = "numericUpDown2";
             this.numericUpDown2.Size = new System.Drawing.Size(54, 20);
             this.numericUpDown2.TabIndex = 3;
+            this.numericUpDown2.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
             // 
             // numericUpDown1
             // 
             this.numericUpDown1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDown1.Location = new System.Drawing.Point(124, 38);
+            this.numericUpDown1.Location = new System.Drawing.Point(124, 57);
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(54, 20);
             this.numericUpDown1.TabIndex = 2;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // label2
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(36, 66);
+            this.label2.Location = new System.Drawing.Point(36, 85);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(81, 13);
             this.label2.TabIndex = 1;
@@ -128,7 +143,7 @@
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 38);
+            this.label1.Location = new System.Drawing.Point(8, 57);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(109, 13);
             this.label1.TabIndex = 0;
@@ -193,8 +208,34 @@
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersWidth = 60;
             this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.dataGridView1.Size = new System.Drawing.Size(701, 318);
+            this.dataGridView1.Size = new System.Drawing.Size(701, 299);
             this.dataGridView1.TabIndex = 5;
+            // 
+            // numericUpDown4
+            // 
+            this.numericUpDown4.Location = new System.Drawing.Point(122, 31);
+            this.numericUpDown4.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDown4.Name = "numericUpDown4";
+            this.numericUpDown4.Size = new System.Drawing.Size(56, 20);
+            this.numericUpDown4.TabIndex = 6;
+            this.numericUpDown4.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(39, 34);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(77, 13);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "maksimal epoh";
             // 
             // Form1
             // 
@@ -215,6 +256,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -233,6 +275,8 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown numericUpDown4;
     }
 }
 
