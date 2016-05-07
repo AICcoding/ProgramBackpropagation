@@ -104,17 +104,82 @@ namespace ProgramBackpropagation
                     inputLayer.isiLayerInput(atribut[i]);
                     MessageBox.Show("Data ke: " + (i+1));
 
-                    for (int k = 0; k <inputLayer.jumlahNeuron; k++)
+                    /*for (int k = 0; k <inputLayer.jumlahNeuron; k++)
                     {
                         //MessageBox.Show("Data neuron ke: " + (k + 1) + " adalah = " + inputLayer.outputNeuron[k]);
+                        for (int j = 0; j < inputLayer.jumlahNeuronAtas; j++)
+                        {
+                            MessageBox.Show("NEURON: " + k + " - " + j + " = " + inputLayer.weightNeuron[k,j].ToString());
+                        }
+                    }*/
+                    inputLayer.weightNeuron[0, 0] = 0.2;
+                    inputLayer.weightNeuron[0, 1] = 0.3;
+                    inputLayer.weightNeuron[0, 2] = -0.1;
+
+                    inputLayer.weightNeuron[1, 0] = 0.3;
+                    inputLayer.weightNeuron[1, 1] = 0.1;
+                    inputLayer.weightNeuron[1, 2] = -0.1;
+
+                    inputLayer.weightBias[0] = -0.3;
+                    inputLayer.weightBias[1] = 0.3;
+                    inputLayer.weightBias[2] = 0.3;
+
+                    /*for (int k = 0; k < inputLayer.jumlahNeuron; k++)
+                    {
+                        //MessageBox.Show("Data neuron ke: " + (k + 1) + " adalah = " + inputLayer.outputNeuron[k]);
+                        for (int j = 0; j < inputLayer.jumlahNeuronAtas; j++)
+                        {
+                            MessageBox.Show("NEURON: " + k + " - " + j + " = " + inputLayer.weightNeuron[k,j].ToString());
+                            MessageBox.Show("BIAS: " + j + " = " + inputLayer.weightBias[j].ToString());
+                        }
+                    }*/
+
+                    //hiddenLayer.inputNeuron = inputLayer.outputNeuron;
+                    hiddenLayer.hitungOutput(inputLayer.outputNeuron, inputLayer.weightNeuron, inputLayer.weightBias);
+
+                    /*for (int k = 0; k < inputLayer.jumlahNeuron; k++)
+                    {
+                        //MessageBox.Show("Data neuron ke: " + (k + 1) + " adalah = " + inputLayer.outputNeuron[k]);
+                        for (int j = 0; j < inputLayer.jumlahNeuronAtas; j++)
+                        {
+                            MessageBox.Show("NEURON: " + k + " - " + j + " = " + inputLayer.weightNeuron[k,j].ToString());
+                            MessageBox.Show("BIAS: " + j + " = " + inputLayer.weightBias[j].ToString());
+                        }
+                    }*/
+
+                    /*double a = 0.3 + 1*(0.3) + 1*(0.1);
+                    double b = 1.0 / (1.0 + Math.Exp(-a));
+
+                    MessageBox.Show("Hasil a: " + a + "\n" + "Hasil b: " + b);*/
+
+                    /*for (int z = 0; z < outputLayer.jumlahNeuron; z++)
+                    {
+                        double temp = 0;
+
+                        for (int j = 0; j < inputLayer.outputNeuron.Length; j++)
+                        {
+                            //Hitung net
+                            temp += (inputLayer.inputNeuron[z] * inputLayer.weightNeuron[z, j]);
+                        }
+                        temp += inputLayer.weightBias[z];
+                        //Langsung aktivasi dengan fungsi Sigmoid
+                        a = temp;
+                        b = 1.0 / (1.0 + Math.Exp(-a));
+
+                        MessageBox.Show()
+                    }*/
+
+                    for (int k = 0; k < hiddenLayer.jumlahNeuron; k++)
+                    {
+                        MessageBox.Show("Data neuron ke: " + (k + 1) + " adalah = " + hiddenLayer.outputNeuron[k].ToString());
+                        //MessageBox.Show("Data neuron ke: " + (k + 1) + " adalah = " + hiddenLayer.inputNeuron[k]);
                         /*for (int j = 0; j < inputLayer.jumlahNeuronAtas; j++)
                         {
                             MessageBox.Show("NEURON: " + k + " - " + j + " = " + inputLayer.weightNeuron[k,j].ToString());
+                            MessageBox.Show("BIAS: " + j + " = " + inputLayer.weightBias[j].ToString());
                         }*/
                     }
 
-                    hiddenLayer.inputNeuron = inputLayer.outputNeuron;
-                    hiddenLayer.hitungOutput();
                 }
 
 

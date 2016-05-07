@@ -27,8 +27,6 @@ namespace ProgramBackpropagation
 
         public double[] error; //[Urutan Neuron ini] - Error dari neuron(s) di layer ini
 
-        public double temp = 0;
-
         public void inisialisasi()
         {
             weightNeuron = new double[jumlahNeuron, jumlahNeuronAtas];
@@ -58,15 +56,19 @@ namespace ProgramBackpropagation
         }
 
         #region Feed-Forward
-        public void hitungOutput()
+        public void hitungOutput(double[] inputNeuronBawah, double[,] weightNeuronBawah, double[] weightBias) //semua parameter ini berasal dari data layer bawah.
         {
             for(int i = 0; i < jumlahNeuron; i++)
             {
-                for(int j = 0; j < jumlahNeuronAtas; j++)
+                double temp = 0;
+
+                for (int j = 0; j < 2; j++)
                 {
                     //Hitung net
-                    temp += (inputNeuron[i] * weightNeuron[i,j]);
+                    temp += (inputNeuronBawah[j] * weightNeuronBawah[j, i]);
                 }
+                temp += weightBias[i];
+
                 //Langsung aktivasi dengan fungsi Sigmoid
                 outputNeuron[i] = hitungSigmoid(temp);
             }
