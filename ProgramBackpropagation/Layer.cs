@@ -32,6 +32,11 @@ namespace ProgramBackpropagation
             weightNeuron = new double[jumlahNeuron, jumlahNeuronAtas];
             weightBias = new double[jumlahNeuronAtas];
 
+            error = new double[jumlahNeuron];
+
+            deltaWeightNeuron = new double[jumlahNeuron, jumlahNeuronAtas];
+            deltaWeightBias = new double[jumlahNeuronAtas];
+
             outputNeuron = new double[jumlahNeuron];
         }
 
@@ -62,7 +67,7 @@ namespace ProgramBackpropagation
             {
                 double temp = 0;
 
-                for (int j = 0; j < 2; j++)
+                for (int j = 0; j < inputNeuronBawah.Length; j++)
                 {
                     //Hitung net
                     temp += (inputNeuronBawah[j] * weightNeuronBawah[j, i]);
@@ -81,8 +86,10 @@ namespace ProgramBackpropagation
         #endregion
 
         #region Backpropagation
-        public void hitungError(double t) //overload method untuk output layer
+        public void hitungError(String kelas) //overload method untuk output layer
         {
+            double t = Convert.ToDouble(kelas);
+
             for (int i = 0; i < jumlahNeuron; i++)
             {
                 //hitung δ = (tk – yk) yk (1 – yk) //khusus untuk layer output
@@ -99,6 +106,7 @@ namespace ProgramBackpropagation
                     //hitung δ pada hidden layer.
                     error[i] += (errorNeuronAtas[j] * weightNeuron[i,j]);
                 }
+                //langsung hitung dengan derivatifnya
                 error[i] = error[i] * hitungDerivatifSigmoid(this.outputNeuron[i]);
             }
         }

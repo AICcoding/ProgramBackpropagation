@@ -23,6 +23,8 @@ namespace ProgramBackpropagation
         public List<List<String>>atribut;
         public List<String> kelas;
 
+        double learningRate;
+
         private void button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog openfile1 = new OpenFileDialog();
@@ -81,6 +83,7 @@ namespace ProgramBackpropagation
 
         private void button2_Click(object sender, EventArgs e)
         {
+            learningRate = Convert.ToDouble(numericUpDown3.Value);
             training();
 
         }
@@ -93,8 +96,8 @@ namespace ProgramBackpropagation
 
             //inisialisasi layer
             Layer inputLayer;
-            Layer hiddenLayer = new Layer(3);
-            Layer outputLayer = new Layer(3);
+            Layer outputLayer = new Layer(1);
+            Layer hiddenLayer = new Layer(3, outputLayer.jumlahNeuron);
             inputLayer = new Layer(atribut[0].Count, hiddenLayer.jumlahNeuron);
 
             do
@@ -147,7 +150,7 @@ namespace ProgramBackpropagation
                         }
                     }*/
 
-                    /*double a = 0.3 + 1*(0.3) + 1*(0.1);
+                    /*double a = -0.1 + 0.55*(0.5) + 0.67*(-0.3) + 0.52*(-0.4);
                     double b = 1.0 / (1.0 + Math.Exp(-a));
 
                     MessageBox.Show("Hasil a: " + a + "\n" + "Hasil b: " + b);*/
@@ -169,6 +172,7 @@ namespace ProgramBackpropagation
                         MessageBox.Show()
                     }*/
 
+                    MessageBox.Show("LANGKAH 4");
                     for (int k = 0; k < hiddenLayer.jumlahNeuron; k++)
                     {
                         MessageBox.Show("Data neuron ke: " + (k + 1) + " adalah = " + hiddenLayer.outputNeuron[k].ToString());
@@ -179,6 +183,106 @@ namespace ProgramBackpropagation
                             MessageBox.Show("BIAS: " + j + " = " + inputLayer.weightBias[j].ToString());
                         }*/
                     }
+
+                    hiddenLayer.weightNeuron[0, 0] = 0.5;
+
+                    hiddenLayer.weightNeuron[1, 0] = -0.3;
+
+                    hiddenLayer.weightNeuron[2, 0] = -0.4;
+
+                    hiddenLayer.weightBias[0] = -0.1;
+
+                    /*double a = hiddenLayer.weightBias[0] + hiddenLayer.outputNeuron[0] * (hiddenLayer.weightNeuron[0, 0]) + hiddenLayer.outputNeuron[1] * (hiddenLayer.weightNeuron[1, 0]) + hiddenLayer.outputNeuron[2] * (hiddenLayer.weightNeuron[2, 0]);
+                    double b = 1.0 / (1.0 + Math.Exp(-a));
+
+                    MessageBox.Show("Hasil a: " + a + "\n" + "Hasil b: " + b);*/
+
+
+                    outputLayer.hitungOutput(hiddenLayer.outputNeuron, hiddenLayer.weightNeuron, hiddenLayer.weightBias);
+
+                    MessageBox.Show("LANGKAH 5");
+                    MessageBox.Show(outputLayer.outputNeuron[0].ToString());
+                    for (int k = 0; k < outputLayer.jumlahNeuron; k++)
+                    {
+                        MessageBox.Show("Data neuron ke: " + (k + 1) + " adalah = " + outputLayer.outputNeuron[k].ToString());
+                        //MessageBox.Show("Data neuron ke: " + (k + 1) + " adalah = " + hiddenLayer.inputNeuron[k]);
+                        /*for (int j = 0; j < inputLayer.jumlahNeuronAtas; j++)
+                        {
+                            MessageBox.Show("NEURON: " + k + " - " + j + " = " + inputLayer.weightNeuron[k,j].ToString());
+                            MessageBox.Show("BIAS: " + j + " = " + inputLayer.weightBias[j].ToString());
+                        }*/
+                    }
+
+                    outputLayer.hitungError(kelas[i]);
+                    MessageBox.Show("LANGKAH 6");
+                    for (int k = 0; k < outputLayer.jumlahNeuron; k++)
+                    {
+                        MessageBox.Show("Data error ke: " + (k + 1) + " adalah = " + outputLayer.error[k].ToString());
+                    }
+
+                    hiddenLayer.cariDelta(learningRate, outputLayer.error);
+                    for (int k = 0; k < hiddenLayer.jumlahNeuron; k++)
+                    {
+                        for (int j = 0; j < hiddenLayer.jumlahNeuronAtas; j++)
+                        {
+                            MessageBox.Show("Data deltaweight ke: " + k + " - " + j + " = " + hiddenLayer.deltaWeightNeuron[k, j].ToString());
+                            MessageBox.Show("Data deltaBias ke: " + j + " = " + hiddenLayer.deltaWeightBias[j].ToString());
+                        }
+                    }
+
+                    /*double error = 0;
+                    for (int j = 0; j < outputLayer.jumlahNeuron; j++)
+                    {
+                        //hitung δ pada hidden layer.
+                        error = (outputLayer.error[j] * hiddenLayer.weightNeuron[1, j]);
+                        error = error * hiddenLayer.outputNeuron[1] * (1 - hiddenLayer.outputNeuron[1]);
+                    }
+
+                    MessageBox.Show("ERRORNYA BANG: " + error.ToString());*/
+
+                    hiddenLayer.hitungError(outputLayer.error);
+                    MessageBox.Show("LANGKAH 7");
+                    for (int k = 0; k < hiddenLayer.jumlahNeuron; k++)
+                    {
+                        MessageBox.Show("Data error HIDDEN ke: " + (k + 1) + " adalah = " + hiddenLayer.error[k].ToString());
+                    }
+
+                    inputLayer.cariDelta(learningRate, hiddenLayer.error);
+                    for (int k = 0; k < inputLayer.jumlahNeuron; k++)
+                    {
+                        for (int j = 0; j < inputLayer.jumlahNeuronAtas; j++)
+                        {
+                            MessageBox.Show("Data deltaweight ke: " + k + " - " + j + " = " + inputLayer.deltaWeightNeuron[k, j].ToString());
+                            MessageBox.Show("Data deltaBias ke: " + j + " = " + inputLayer.deltaWeightBias[k].ToString());
+                        }
+                    }
+
+                    hiddenLayer.ubahWeight();
+                    MessageBox.Show("LANGKAH 8");
+                    MessageBox.Show("HIDDEN SECRET");
+                    for (int k = 0; k < hiddenLayer.jumlahNeuron; k++)
+                    {
+                        //MessageBox.Show("Data neuron ke: " + (k + 1) + " adalah = " + inputLayer.outputNeuron[k]);
+                        for (int j = 0; j < hiddenLayer.jumlahNeuronAtas; j++)
+                        {
+                            MessageBox.Show("W NEURON: " + k + " - " + j + " = " + hiddenLayer.weightNeuron[k, j].ToString());
+                            MessageBox.Show("W BIAS: " + j + " = " + hiddenLayer.weightBias[j].ToString());
+                        }
+                    }
+
+                    inputLayer.ubahWeight();
+                    MessageBox.Show("INPUT SECRET");
+                    for (int k = 0; k < inputLayer.jumlahNeuron; k++)
+                    {
+                        //MessageBox.Show("Data neuron ke: " + (k + 1) + " adalah = " + inputLayer.outputNeuron[k]);
+                        for (int j = 0; j < inputLayer.jumlahNeuronAtas; j++)
+                        {
+                            MessageBox.Show("NEURON: " + k + " - " + j + " = " + inputLayer.weightNeuron[k,j].ToString());
+                            MessageBox.Show("BIAS: " + j + " = " + inputLayer.weightBias[j].ToString());
+                        }
+                    }
+
+
 
                 }
 
