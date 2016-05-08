@@ -60,6 +60,18 @@ namespace ProgramBackpropagation
             }
         }
 
+        public void isi_weight(double[,] weight_neuron, double[] weight_bias) //khusus untuk tahap testing
+        {
+            for (int i = 0; i < jumlahNeuron; i++)
+            {
+                for (int j = 0; j < jumlahNeuronAtas; j++)
+                {
+                    weightNeuron[i, j] = weight_neuron[i, j];
+                    weightBias[j] = weight_bias[j];
+                }
+            }
+        }
+
         #region Feed-Forward
         public void hitungOutput(double[] inputNeuronBawah, double[,] weightNeuronBawah, double[] weightBias) //semua parameter ini berasal dari data layer bawah.
         {
@@ -94,6 +106,16 @@ namespace ProgramBackpropagation
             {
                 //hitung δ = (tk – yk) yk (1 – yk) //khusus untuk layer output
                 error[i] = (t - this.outputNeuron[i]) * hitungDerivatifSigmoid(this.outputNeuron[i]);
+            }
+        }
+
+        public void hitungError(List<int> target) //overload method untuk output layer
+        {
+
+            for (int i = 0; i < jumlahNeuron; i++)
+            {
+                //hitung δ = (tk – yk) yk (1 – yk) //khusus untuk layer output
+                error[i] = (target[i] - this.outputNeuron[i]) * hitungDerivatifSigmoid(this.outputNeuron[i]);
             }
         }
 
