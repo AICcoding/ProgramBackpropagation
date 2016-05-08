@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace ProgramBackpropagation
 {
@@ -55,14 +54,13 @@ namespace ProgramBackpropagation
             {
                 for (int j = 0; j < jumlahNeuronAtas; j++)
                 {
-                    weightNeuron[i, j] = r.Next(-10, 10) / 10F;
-                    weightBias[j] = r.Next(-10, 10) / 10F;
+                    weightNeuron[i,j] = r.NextDouble();
+                    weightBias[j] = r.NextDouble();
                 }
             }
         }
 
         #region Feed-Forward
-
         public void hitungOutput(double[] inputNeuronBawah, double[,] weightNeuronBawah, double[] weightBias) //semua parameter ini berasal dari data layer bawah.
         {
             for(int i = 0; i < jumlahNeuron; i++)
@@ -99,18 +97,6 @@ namespace ProgramBackpropagation
             }
         }
 
-        public void hitungError(List<int> target) //overload method untuk output layer
-        {
-            double t;
-
-            for (int i = 0; i < jumlahNeuron; i++)
-            {
-                t = target[i];
-                //hitung δ = (tk – yk) yk (1 – yk) //khusus untuk layer output
-                error[i] = (t - this.outputNeuron[i]) * hitungDerivatifSigmoid(this.outputNeuron[i]);
-            }
-        }
-
         public void hitungError(double[] errorNeuronAtas) //overload method untuk hidden layer
         {
             for (int i = 0; i < jumlahNeuron; i++)
@@ -141,7 +127,6 @@ namespace ProgramBackpropagation
         {
             return x * (1 - x);
         }
-        
         #endregion
 
         public void ubahWeight()
@@ -151,8 +136,11 @@ namespace ProgramBackpropagation
                 for (int j = 0; j < jumlahNeuronAtas; j++)
                 {
                     weightNeuron[i,j] += deltaWeightNeuron[i,j];
-                    weightBias[j] += deltaWeightBias[j];
                 }
+            }
+            for (int i = 0; i < jumlahNeuronAtas; i++)
+            {
+                weightBias[i] += deltaWeightBias[i];
             }
         }
 

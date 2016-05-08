@@ -24,9 +24,8 @@ namespace ProgramBackpropagation
         public List<String> kelas;
 
         double learningRate;
-        int mak_epoh,jumlah_hiden_layer, jumlah_unit_hiden_layer, jumlah_kelas; //jumlah_kelas misalnya pda kelas iris = 3
-        List<String> nama_kelas; //nama kelas yang tidak ada sama. misalnya versicolor, verginica, setosa
-        List<int> target; //XOR argetnya 0,1 jadi misalnya ada 3 kelas, nilainya 0,1,2
+        int jumlahHiddenLayer;
+        int jumlahNeuronHiddenLayer;
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -81,266 +80,95 @@ namespace ProgramBackpropagation
                 dataGridView1.Rows[j].Cells[dataGridView1.Columns.Count - 1].Value = kelas[j];
             }
 
-            cari_jumlah_kelas();
-            buat_target();
-
             button2.Enabled = true;
-        }
-
-        private void cari_jumlah_kelas()
-        {
-            nama_kelas = new List<String>();
-            bool ada;
-
-            jumlah_kelas = 1;
-            nama_kelas.Add(kelas[0]);
-
-            for (int i = 1; i < kelas.Count; i++)
-            {
-                ada = false;
-                for (int j = 0; j < nama_kelas.Count; j++)
-                {
-                    if(kelas[i]==nama_kelas[j])
-                    {
-                        ada = true;
-                        break;
-                    }
-                }
-                if(ada==false)
-                {
-                    nama_kelas.Add(kelas[i]);
-                    jumlah_kelas += 1;
-                }
-            }
-        }
-
-        private void buat_target()
-        {
-            //membuat target misalnya pada iris ada 3 yaitu versicolor, verginica, setosa. itu targetnya 0, 1, 2
-            target=new List<int>();
-
-            for(int i=0;i<jumlah_kelas;i++)
-            {               
-                target.Add(i);
-            }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             learningRate = Convert.ToDouble(numericUpDown3.Value);
-            jumlah_hiden_layer = (int)numericUpDown1.Value;
-            jumlah_unit_hiden_layer = (int)numericUpDown2.Value;
-            mak_epoh = (int)numericUpDown4.Value;
             training();
-
+            jumlahHiddenLayer = Convert.ToInt32(numericUpDown1.Value);
+            jumlahNeuronHiddenLayer = Convert.ToInt32(numericUpDown2.Value);
         }
 
         public void training()
         {
             int coba = 0;
+            int indexLastHiddenLayer = jumlahNeuronHiddenLayer - 1;
+            Layer[] hiddenLayer = new Layer[jumlahHiddenLayer];
 
-            //MessageBox.Show(atribut.Count.ToString());
+            MessageBox.Show(atribut.Count.ToString());
 
             //inisialisasi layer
-            Layer inputLayer;
-            Layer outputLayer = new Layer(jumlah_kelas); //misalnya pada iris jumlah outputnya 3 karena ada 3 kelas
-            Layer hiddenLayer = new Layer(jumlah_unit_hiden_layer, outputLayer.jumlahNeuron);
-            inputLayer = new Layer(atribut[0].Count, hiddenLayer.jumlahNeuron);
+
+            //bukan perulangan
+            Layer outputLayer = new Layer(kelas.Distinct().Count());
+
+            for(int i = 0; i < jumlahHiddenLayer; i++)
+            {
+                hiddenLayer[i] = new Layer(jumlahNeuronHiddenLayer, outputLayer.jumlahNeuron);
+            }
+            //Layer hiddenLayer = new Layer(3, outputLayer.jumlahNeuron);
+
+            //bukan perulangan
+            Layer inputLayer = new Layer(atribut[0].Count, hiddenLayer[0].jumlahNeuron);
 
             do
             {
                 for (int i = 0; i < atribut.Count; i++)
                 {
                     inputLayer.isiLayerInput(atribut[i]);
-                    //MessageBox.Show("Data ke: " + (i+1));
 
-                    /*for (int k = 0; k <inputLayer.jumlahNeuron; k++)
+                    //perulangan
+                    for (int z = 0; z < jumlahHiddenLayer; z++)
                     {
-                        //MessageBox.Show("Data neuron ke: " + (k + 1) + " adalah = " + inputLayer.outputNeuron[k]);
-                        for (int j = 0; j < inputLayer.jumlahNeuronAtas; j++)
+                        if(z==0) //hidden layer pertama
                         {
-                            MessageBox.Show("NEURON: " + k + " - " + j + " = " + inputLayer.weightNeuron[k,j].ToString());
+                            hiddenLayer[z].hitungOutput(inputLayer.outputNeuron, inputLayer.weightNeuron, inputLayer.weightBias);
                         }
-                    }*/
-                    /*inputLayer.weightNeuron[0, 0] = 0.2;
-                    inputLayer.weightNeuron[0, 1] = 0.3;
-                    inputLayer.weightNeuron[0, 2] = -0.1;
-
-                    inputLayer.weightNeuron[1, 0] = 0.3;
-                    inputLayer.weightNeuron[1, 1] = 0.1;
-                    inputLayer.weightNeuron[1, 2] = -0.1;
-
-                    inputLayer.weightBias[0] = -0.3;
-                    inputLayer.weightBias[1] = 0.3;
-                    inputLayer.weightBias[2] = 0.3;*/
-
-                    /*for (int k = 0; k < inputLayer.jumlahNeuron; k++)
-                    {
-                        //MessageBox.Show("Data neuron ke: " + (k + 1) + " adalah = " + inputLayer.outputNeuron[k]);
-                        for (int j = 0; j < inputLayer.jumlahNeuronAtas; j++)
+                        else
                         {
-                            MessageBox.Show("NEURON: " + k + " - " + j + " = " + inputLayer.weightNeuron[k,j].ToString());
-                            MessageBox.Show("BIAS: " + j + " = " + inputLayer.weightBias[j].ToString());
+                            hiddenLayer[z].hitungOutput(hiddenLayer[z - 1].outputNeuron, hiddenLayer[z - 1].weightNeuron, hiddenLayer[z - 1].weightBias);
+                        }   
+                    }
+                    //hiddenLayer.hitungOutput(inputLayer.outputNeuron, inputLayer.weightNeuron, inputLayer.weightBias);
+
+                    //bukan perulangan
+                    outputLayer.hitungOutput(hiddenLayer[indexLastHiddenLayer].outputNeuron, hiddenLayer[indexLastHiddenLayer].weightNeuron, hiddenLayer[indexLastHiddenLayer].weightBias);
+                    outputLayer.hitungError(kelas[i]);
+
+                    //perulangan
+                    for (int z = indexLastHiddenLayer; z > -1; z--)
+                    {
+                        if(z == indexLastHiddenLayer)
+                        {
+                            hiddenLayer[z].cariDelta(learningRate, outputLayer.error);
+                            hiddenLayer[z].hitungError(outputLayer.error);
                         }
-                    }*/
-
-                    //hiddenLayer.inputNeuron = inputLayer.outputNeuron;
-                    hiddenLayer.hitungOutput(inputLayer.outputNeuron, inputLayer.weightNeuron, inputLayer.weightBias);
-
-                    /*for (int k = 0; k < inputLayer.jumlahNeuron; k++)
-                    {
-                        //MessageBox.Show("Data neuron ke: " + (k + 1) + " adalah = " + inputLayer.outputNeuron[k]);
-                        for (int j = 0; j < inputLayer.jumlahNeuronAtas; j++)
-                        {
-                            MessageBox.Show("NEURON: " + k + " - " + j + " = " + inputLayer.weightNeuron[k,j].ToString());
-                            MessageBox.Show("BIAS: " + j + " = " + inputLayer.weightBias[j].ToString());
-                        }
-                    }*/
-
-                    /*double a = -0.1 + 0.55*(0.5) + 0.67*(-0.3) + 0.52*(-0.4);
-                    double b = 1.0 / (1.0 + Math.Exp(-a));
-
-                    MessageBox.Show("Hasil a: " + a + "\n" + "Hasil b: " + b);*/
-
-                    /*for (int z = 0; z < outputLayer.jumlahNeuron; z++)
-                    {
-                        double temp = 0;
-
-                        for (int j = 0; j < inputLayer.outputNeuron.Length; j++)
-                        {
-                            //Hitung net
-                            temp += (inputLayer.inputNeuron[z] * inputLayer.weightNeuron[z, j]);
-                        }
-                        temp += inputLayer.weightBias[z];
-                        //Langsung aktivasi dengan fungsi Sigmoid
-                        a = temp;
-                        b = 1.0 / (1.0 + Math.Exp(-a));
-
-                        MessageBox.Show()
-                    }*/
-
-                    //MessageBox.Show("LANGKAH 4 dihiden layer");
-                    for (int k = 0; k < hiddenLayer.jumlahNeuron; k++)
-                    {
-                        //MessageBox.Show("Data hiden layer neuron ke: " + (k + 1) + " adalah = " + hiddenLayer.outputNeuron[k].ToString());
-                        
-                        
-                        
-                        //MessageBox.Show("Data neuron ke: " + (k + 1) + " adalah = " + hiddenLayer.inputNeuron[k]);
-                        /*for (int j = 0; j < inputLayer.jumlahNeuronAtas; j++)
-                        {
-                            MessageBox.Show("NEURON: " + k + " - " + j + " = " + inputLayer.weightNeuron[k,j].ToString());
-                            MessageBox.Show("BIAS: " + j + " = " + inputLayer.weightBias[j].ToString());
-                        }*/
+                        hiddenLayer[z].cariDelta(learningRate, hiddenLayer[z + 1].error);
+                        hiddenLayer[z].hitungError(hiddenLayer[z + 1].error);
                     }
+                    //hiddenLayer.cariDelta(learningRate, outputLayer.error);
+                    //hiddenLayer.hitungError(outputLayer.error);
 
-                    /*hiddenLayer.weightNeuron[0, 0] = 0.5;
+                    //bukan perulangan
+                    inputLayer.cariDelta(learningRate, hiddenLayer[0].error);
 
-                    hiddenLayer.weightNeuron[1, 0] = -0.3;
-
-                    hiddenLayer.weightNeuron[2, 0] = -0.4;
-
-                    hiddenLayer.weightBias[0] = -0.1;*/
-
-                    /*double a = hiddenLayer.weightBias[0] + hiddenLayer.outputNeuron[0] * (hiddenLayer.weightNeuron[0, 0]) + hiddenLayer.outputNeuron[1] * (hiddenLayer.weightNeuron[1, 0]) + hiddenLayer.outputNeuron[2] * (hiddenLayer.weightNeuron[2, 0]);
-                    double b = 1.0 / (1.0 + Math.Exp(-a));
-
-                    MessageBox.Show("Hasil a: " + a + "\n" + "Hasil b: " + b);*/
-
-
-                    outputLayer.hitungOutput(hiddenLayer.outputNeuron, hiddenLayer.weightNeuron, hiddenLayer.weightBias);
-
-                    //MessageBox.Show("LANGKAH 5");
-                    //MessageBox.Show(outputLayer.outputNeuron[0].ToString());
-                    for (int k = 0; k < outputLayer.jumlahNeuron; k++)
+                    //perulangan
+                    for (int z = 0; z < jumlahHiddenLayer; z++)
                     {
-                        //MessageBox.Show("Data output layer neuron ke: " + (k + 1) + " adalah = " + outputLayer.outputNeuron[k].ToString());
-                        
-                        
-                        
-                        //MessageBox.Show("Data neuron ke: " + (k + 1) + " adalah = " + hiddenLayer.inputNeuron[k]);
-                        /*for (int j = 0; j < inputLayer.jumlahNeuronAtas; j++)
-                        {
-                            MessageBox.Show("NEURON: " + k + " - " + j + " = " + inputLayer.weightNeuron[k,j].ToString());
-                            MessageBox.Show("BIAS: " + j + " = " + inputLayer.weightBias[j].ToString());
-                        }*/
+                        hiddenLayer[z].ubahWeight();
                     }
+                    //hiddenLayer.ubahWeight();
 
-                    //outputLayer.hitungError(kelas[i]);
-                    outputLayer.hitungError(target);
-                    //MessageBox.Show("LANGKAH 6");
-                    for (int k = 0; k < outputLayer.jumlahNeuron; k++)
-                    {
-                        //MessageBox.Show("Data error output layer ke: " + (k + 1) + " adalah = " + outputLayer.error[k].ToString());
-                    }
-
-                    hiddenLayer.cariDelta(learningRate, outputLayer.error);
-                    for (int k = 0; k < hiddenLayer.jumlahNeuron; k++)
-                    {
-                        for (int j = 0; j < hiddenLayer.jumlahNeuronAtas; j++)
-                        {
-                            //MessageBox.Show("Data deltaweight ke: " + (k + 1) + " - " + (j + 1) + " = " + hiddenLayer.deltaWeightNeuron[k, j].ToString());
-                            //try { MessageBox.Show("Data deltaBias ke: " + (j + 1) + " = " + hiddenLayer.deltaWeightBias[j].ToString()); }catch (Exception e) { }
-                        }
-                    }
-
-                    /*double error = 0;
-                    for (int j = 0; j < outputLayer.jumlahNeuron; j++)
-                    {
-                        //hitung δ pada hidden layer.
-                        error = (outputLayer.error[j] * hiddenLayer.weightNeuron[1, j]);
-                        error = error * hiddenLayer.outputNeuron[1] * (1 - hiddenLayer.outputNeuron[1]);
-                    }
-
-                    MessageBox.Show("ERRORNYA BANG: " + error.ToString());*/
-
-                    hiddenLayer.hitungError(outputLayer.error);
-                    //MessageBox.Show("LANGKAH 7");
-                    for (int k = 0; k < hiddenLayer.jumlahNeuron; k++)
-                    {
-                        //MessageBox.Show("Data error HIDDEN ke: " + (k + 1) + " adalah = " + hiddenLayer.error[k].ToString());
-                    }
-
-                    inputLayer.cariDelta(learningRate, hiddenLayer.error);
-                    for (int k = 0; k < inputLayer.jumlahNeuron; k++)
-                    {
-                        for (int j = 0; j < inputLayer.jumlahNeuronAtas; j++)
-                        {
-                           //MessageBox.Show("Data deltaweight ke: " + (k + 1) + " - " + (j + 1) + " = " + inputLayer.deltaWeightNeuron[k, j].ToString());
-                            //try { MessageBox.Show("Data deltaBias ke: " + (j + 1) + " = " + inputLayer.deltaWeightBias[k].ToString()); }catch(Exception e){}
-                        }
-                    }
-
-                    hiddenLayer.ubahWeight();
-                    //MessageBox.Show("LANGKAH 8");
-                    //MessageBox.Show("HIDDEN SECRET");
-                    for (int k = 0; k < hiddenLayer.jumlahNeuron; k++)
-                    {
-                        //MessageBox.Show("Data neuron ke: " + (k + 1) + " adalah = " + inputLayer.outputNeuron[k]);
-                        for (int j = 0; j < hiddenLayer.jumlahNeuronAtas; j++)
-                        {
-                            //MessageBox.Show("W NEURON: " + (k + 1) + " - " + (j + 1) + " = " + hiddenLayer.weightNeuron[k, j].ToString());
-                            //MessageBox.Show("W BIAS: " + (j+1) + " = " + hiddenLayer.weightBias[j].ToString());
-                        }
-                    }
-
+                    //bukan perulangan
                     inputLayer.ubahWeight();
-                    //MessageBox.Show("INPUT SECRET");
-                    for (int k = 0; k < inputLayer.jumlahNeuron; k++)
-                    {
-                        //MessageBox.Show("Data neuron ke: " + (k + 1) + " adalah = " + inputLayer.outputNeuron[k]);
-                        for (int j = 0; j < inputLayer.jumlahNeuronAtas; j++)
-                        {
-                            //MessageBox.Show("W NEURON: " + (k + 1) + " - " + (j + 1) + " = " + inputLayer.weightNeuron[k, j].ToString());
-                            //MessageBox.Show("W BIAS: " + (j+1) + " = " + inputLayer.weightBias[j].ToString());
-                        }
-                    }
                 }
 
-                coba++;
-            } while (coba < mak_epoh+1);
-            MessageBox.Show("Selesai\n tinggal buat stoping kriteria dan testing. :D");
 
+
+                coba++;
+            } while (coba < 2000);
         }
     }
 }
