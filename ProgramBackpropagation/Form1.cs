@@ -26,6 +26,7 @@ namespace ProgramBackpropagation
         double learningRate;
         int jumlahHiddenLayer;
         int jumlahNeuronHiddenLayer;
+        int maksIterasi;
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -85,19 +86,21 @@ namespace ProgramBackpropagation
 
         private void button2_Click(object sender, EventArgs e)
         {
-            learningRate = Convert.ToDouble(numericUpDown3.Value);
-            training();
             jumlahHiddenLayer = Convert.ToInt32(numericUpDown1.Value);
             jumlahNeuronHiddenLayer = Convert.ToInt32(numericUpDown2.Value);
+            learningRate = Convert.ToDouble(numericUpDown3.Value);
+            maksIterasi = Convert.ToInt32(numericUpDown4.Value);
+
+            training();
         }
 
         public void training()
         {
             int coba = 0;
-            int indexLastHiddenLayer = jumlahNeuronHiddenLayer - 1;
+            int indexLastHiddenLayer = jumlahHiddenLayer - 1;
             Layer[] hiddenLayer = new Layer[jumlahHiddenLayer];
 
-            MessageBox.Show(atribut.Count.ToString());
+            MessageBox.Show("JUMLAH DATA: " + atribut.Count.ToString());
 
             //inisialisasi layer
 
@@ -115,8 +118,9 @@ namespace ProgramBackpropagation
 
             do
             {
-                for (int i = 0; i < atribut.Count; i++)
+                for (int i = 0; i < atribut.Count; i++) //banyaknya jumlah data training.
                 {
+                    #region FEED-FORWARD
                     inputLayer.isiLayerInput(atribut[i]);
 
                     //perulangan
@@ -129,14 +133,16 @@ namespace ProgramBackpropagation
                         else
                         {
                             hiddenLayer[z].hitungOutput(hiddenLayer[z - 1].outputNeuron, hiddenLayer[z - 1].weightNeuron, hiddenLayer[z - 1].weightBias);
-                        }   
+                        }
                     }
                     //hiddenLayer.hitungOutput(inputLayer.outputNeuron, inputLayer.weightNeuron, inputLayer.weightBias);
 
                     //bukan perulangan
                     outputLayer.hitungOutput(hiddenLayer[indexLastHiddenLayer].outputNeuron, hiddenLayer[indexLastHiddenLayer].weightNeuron, hiddenLayer[indexLastHiddenLayer].weightBias);
-                    outputLayer.hitungError(kelas[i]);
+                    #endregion
 
+                    #region BACKPROPAGATE
+                    outputLayer.hitungError(kelas[i]);
                     //perulangan
                     for (int z = indexLastHiddenLayer; z > -1; z--)
                     {
@@ -145,15 +151,20 @@ namespace ProgramBackpropagation
                             hiddenLayer[z].cariDelta(learningRate, outputLayer.error);
                             hiddenLayer[z].hitungError(outputLayer.error);
                         }
-                        hiddenLayer[z].cariDelta(learningRate, hiddenLayer[z + 1].error);
-                        hiddenLayer[z].hitungError(hiddenLayer[z + 1].error);
+                        else
+                        {
+                            hiddenLayer[z].cariDelta(learningRate, hiddenLayer[z + 1].error);
+                            hiddenLayer[z].hitungError(hiddenLayer[z + 1].error);
+                        }
                     }
                     //hiddenLayer.cariDelta(learningRate, outputLayer.error);
                     //hiddenLayer.hitungError(outputLayer.error);
 
                     //bukan perulangan
                     inputLayer.cariDelta(learningRate, hiddenLayer[0].error);
+                    #endregion
 
+                    #region PERBAIKI BOBOT
                     //perulangan
                     for (int z = 0; z < jumlahHiddenLayer; z++)
                     {
@@ -163,12 +174,14 @@ namespace ProgramBackpropagation
 
                     //bukan perulangan
                     inputLayer.ubahWeight();
+                    #endregion
                 }
 
 
 
                 coba++;
-            } while (coba < 2000);
+            } while (coba < 0);
+            button3.Enabled = true;
         }
     }
 }
